@@ -30,7 +30,12 @@ export default {
   },
   data: () => ({
     showAnswer: false,
-  })
+  }),
+  watch: {
+    title() {
+      this.showAnswer = false;
+    }
+  }
 }
 </script>
 

@@ -4,7 +4,7 @@
         :key="index"
         :class="{completed: index < day, current: index == day}"
         class="app-completion-day"
-        :disabled="index > day">
+        @click="$emit('changeDay', index - 1)">
       {{ index }}
     </button>
 

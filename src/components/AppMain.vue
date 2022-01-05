@@ -1,6 +1,6 @@
 <template>
   <div class="app-main">
-    <AppCompletion :day="currentDay + 1"/>
+    <AppCompletion :day="currentDay + 1" @changeDay="handleChangeDay"/>
     <AppCard
       :title="getTitle"
       :answer="getAnswer"
@@ -31,7 +31,7 @@ export default {
     cards,
     currentCard: {},
     currentDay: 0,
-    currentIndex: 17,
+    currentIndex: 0,
     studyPlan: [],
     completed: false,
   }),
@@ -58,11 +58,18 @@ export default {
     handleNext() {
       if (this.currentIndex + 1 === this.studyPlan.length) {
         this.currentDay++;
+        this.completed = true;
         this.saveScore();
       } else {
         this.currentIndex++;
       }
       this.updateCurrentCard();
+    },
+    handleChangeDay(index) {
+      this.currentDay = index;
+      this.createStudyPlan();
+      this.updateCurrentCard();
+      this.saveScore();
     },
     updateCurrentCard() {
       this.currentCard = this.studyPlan[this.currentIndex];
@@ -75,10 +82,10 @@ export default {
     },
     saveScore() {
       localStorage.setItem('day', this.currentDay);
-      this.completed = true;
     },
     createStudyPlan() {
       let { currentDay, cards } = this;
+      this.studyPlan = [];
       for (let i = 1; currentDay - i >= 0 && i < 5; i++) {
         this.studyPlan.unshift(...cards[currentDay - i]);
       }

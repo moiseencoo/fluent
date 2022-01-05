@@ -73,7 +73,7 @@ export default {
       this.speechRecognition.start();
     },
     prepareStr(str) {
-      return str.replaceAll(/[.,?]/g,'').toLowerCase();
+      return str.replaceAll(/[.,?—]/g,'').toLowerCase();
     },
   }
 }
