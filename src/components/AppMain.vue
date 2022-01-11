@@ -7,10 +7,9 @@
       :day="currentDay + 1"
       :total="studyPlan.length"
       :index="currentIndex + 1"
+      @play="speak(getAnswer)"
     />
-    <AppInput
-      :answer="getAnswer"
-      @solved="handleNext"/>
+    <AppInput :answer="getAnswer" @solved="handleNext"/>
   </div>
 </template>
 
@@ -19,9 +18,11 @@ import AppCompletion from './AppCompletion';
 import AppCard from './AppCard';
 import AppInput from './AppInput';
 import cards from '@/db/cards.js';
+import speech from "@/mixins/speech.js";
 
 export default {
   name: 'AppMain',
+  mixins: [ speech ],
   components: {
     AppCompletion,
     AppCard,
@@ -39,6 +40,7 @@ export default {
     await this.getLastSavedDay();
     this.createStudyPlan();
     this.updateCurrentCard();
+    await this.fetchVoices();
   },
   computed: {
     getTitle() {
@@ -56,14 +58,17 @@ export default {
   },
   methods: {
     handleNext() {
-      if (this.currentIndex + 1 === this.studyPlan.length) {
-        this.currentDay++;
-        this.completed = true;
-        this.saveScore();
-      } else {
-        this.currentIndex++;
-      }
-      this.updateCurrentCard();
+      this.speak(this.getAnswer);
+      setTimeout(() => {
+        if (this.currentIndex + 1 === this.studyPlan.length) {
+          this.currentDay++;
+          this.completed = true;
+          this.saveScore();
+        } else {
+          this.currentIndex++;
+        }
+        this.updateCurrentCard();
+      }, 1000);
     },
     handleChangeDay(index) {
       this.currentDay = index;

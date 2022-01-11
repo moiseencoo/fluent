@@ -6,7 +6,7 @@
       :class="{wrong: isWrong, correct: allCorrect}"
       @input="checkCompletion"
       ></textarea>
-      <button class="record-btn" :class="{recording: loading}" @click="record">
+      <button class="record-btn" :class="{recording: listening}" @click="record">
         <img :src="micro" class="record-btn-icon"/>
       </button>
   </div>
@@ -16,11 +16,11 @@
 import micro from "@/assets/record.svg";
 import startRecording from "@/assets/record.mp3";
 import recording from "@/mixins/recording.js";
-import speech from "@/mixins/speech.js";
+
 
 export default {
   name: "AppInput",
-  mixins: [ recording, speech ],
+  mixins: [ recording ],
   props: {
     answer: {
       type: String,
@@ -30,13 +30,11 @@ export default {
   data: () => ({
     part: '',
     allCorrect: false,
-    fr_voices: [],
     speechRecognition: null,
-    loading: false,
+    listening: false,
     micro,
   }),
-  async created() {
-    await this.fetchVoices();
+  created() {
     this.createSpeechRecognition();
     this.sound = new Audio(startRecording);
   },
@@ -60,9 +58,8 @@ export default {
       this.allCorrect = false;
       if (!this.isWrong && this.originalStr.length === this.typedStr.length) {
         this.allCorrect = true;
-        this.speak(this.answer);
+        this.$emit('solved');
         setTimeout(() => {
-          this.$emit('solved');
           this.part = "";
           this.allCorrect = false;
         }, 1000);

@@ -9,7 +9,7 @@ export default {
       this.speechRecognition = speechRecognition;
 
       this.speechRecognition.onstart = () => {
-        this.loading = true;
+        this.listening = true;
       };
       this.speechRecognition.onerror = () => {
         console.log('error');
@@ -19,7 +19,7 @@ export default {
       };
       this.speechRecognition.onend = () => {
         this.checkCompletion();
-        this.loading = false;
+        this.listening = false;
       };
 
       this.speechRecognition.onresult = (event) => {

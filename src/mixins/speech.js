@@ -1,5 +1,8 @@
 
 export default {
+  data: () => ({
+    fr_voices: [],
+  }),
   methods: {
     async fetchVoices() {
       let voices = await this.getVoices();
