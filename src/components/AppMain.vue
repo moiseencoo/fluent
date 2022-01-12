@@ -9,7 +9,7 @@
       :index="currentIndex + 1"
       @play="speak(getAnswer)"
     />
-    <AppInput :answer="getAnswer" @solved="handleNext"/>
+    <AppInput :original="getAnswer" @solved="handleNext"/>
   </div>
 </template>
 
@@ -91,11 +91,12 @@ export default {
     createStudyPlan() {
       let { currentDay, cards } = this;
       this.studyPlan = [];
-      for (let i = 1; currentDay - i >= 0 && i < 5; i++) {
+      for (let i = 1; currentDay - i >= 0 && i < 4; i++) {
         this.studyPlan.unshift(...cards[currentDay - i]);
       }
+      let iteration_prev = this.getIteration(cards[currentDay - 1]);
       let iteration = this.getIteration(cards[currentDay]);
-      this.studyPlan.push(...iteration);
+      this.studyPlan.push(...iteration_prev, ...iteration);
     },
     getIteration(arr) {
       let result = [];

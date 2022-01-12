@@ -1,5 +1,8 @@
 
 export default {
+  data: () => ({
+
+  }),
   methods: {
     createSpeechRecognition() {
       let speechRecognition = new window.webkitSpeechRecognition();
@@ -18,7 +21,7 @@ export default {
         this.speechRecognition.stop();
       };
       this.speechRecognition.onend = () => {
-        this.checkCompletion();
+        this.checkCorrectness();
         this.listening = false;
       };
 

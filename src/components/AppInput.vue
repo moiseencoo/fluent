@@ -4,25 +4,24 @@
       v-model="part"
       class="app-textarea"
       :class="{wrong: isWrong, correct: allCorrect}"
-      @input="checkCompletion"
-      ></textarea>
-      <button class="record-btn" :class="{recording: listening}" @click="record">
-        <img :src="micro" class="record-btn-icon"/>
-      </button>
+      @input="checkCorrectness"
+    ></textarea>
+    <button class="record-btn" :class="{recording: listening}" @click="record">
+      <img :src="micro" class="record-btn-icon"/>
+    </button>
   </div>
 </template>
 
 <script>
 import micro from "@/assets/record.svg";
-import startRecording from "@/assets/record.mp3";
 import recording from "@/mixins/recording.js";
-
+import recordingSound from "@/assets/record.mp3";
 
 export default {
   name: "AppInput",
   mixins: [ recording ],
   props: {
-    answer: {
+    original: {
       type: String,
       required: true,
     }
@@ -33,30 +32,31 @@ export default {
     speechRecognition: null,
     listening: false,
     micro,
+    sound: null,
   }),
   created() {
     this.createSpeechRecognition();
-    this.sound = new Audio(startRecording);
+    this.sound = new Audio(recordingSound);
   },
   computed: {
     isWrong() {
-      if (!this.typedStr) return false;
-      return this.typedStr !== this.originalSlicedStr;
+      if (!this.userStr) return false;
+      return this.userStr !== this.originalSlicedStr;
     },
     originalSlicedStr() {
-      return this.prepareStr(this.answer).slice(0, this.typedStr.length)
+      return this.pureStr(this.original).slice(0, this.userStr.length);
     },
     originalStr() {
-      return this.prepareStr(this.answer)
+      return this.pureStr(this.original);
     },
-    typedStr() {
-      return this.prepareStr(this.part);
+    userStr() {
+      return this.pureStr(this.part);
     }
   },
   methods: {
-    checkCompletion() {
+    checkCorrectness() {
       this.allCorrect = false;
-      if (!this.isWrong && this.originalStr.length === this.typedStr.length) {
+      if (!this.isWrong && this.originalStr.length === this.userStr.length) {
         this.allCorrect = true;
         this.$emit('solved');
         setTimeout(() => {
@@ -69,7 +69,7 @@ export default {
       this.sound.play();
       this.speechRecognition.start();
     },
-    prepareStr(str) {
+    pureStr(str) {
       return str.replaceAll(/[.,?—]/g,'').toLowerCase();
     },
   }

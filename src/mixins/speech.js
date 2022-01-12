@@ -2,6 +2,7 @@
 export default {
   data: () => ({
     fr_voices: [],
+    speachSynthesis: null,
   }),
   methods: {
     async fetchVoices() {
@@ -9,6 +10,9 @@ export default {
       this.fr_voices.push(voices[4]);
       this.fr_voices.push(voices[38]);
       this.fr_voices.push(voices[54]);
+      const utterance = new SpeechSynthesisUtterance();
+      utterance.lang = 'fr-CA';
+      this.speachSynthesis = utterance;
     },
     getVoices() {
       return new Promise((resolve) => {
@@ -25,10 +29,9 @@ export default {
     },
     speak(text) {
       let index = Math.floor(Math.random() * 3);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'fr-CA';
-      utterance.voice = this.fr_voices[index];
-      speechSynthesis.speak(utterance);
+      this.speachSynthesis.voice = this.fr_voices[index];
+      this.speachSynthesis.text = text;
+      speechSynthesis.speak(this.speachSynthesis);
     },
   }
 }
