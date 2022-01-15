@@ -7,7 +7,6 @@
         @click="$emit('changeDay', index - 1)">
       {{ index }}
     </button>
-
   </div>
 </template>
 
@@ -24,13 +23,7 @@ export default {
 .app-completion {
   display: flex;
   flex-wrap: wrap;
-  height: 42px;
-  overflow: hidden;
   margin-bottom: 30px;
-}
-
-.app-completion:hover {
-  height: 100%;
 }
 
 .app-completion-day {

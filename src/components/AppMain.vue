@@ -1,29 +1,35 @@
 <template>
-  <div class="app-main">
-    <AppCompletion :day="currentDay + 1" @changeDay="handleChangeDay"/>
-    <AppCard
-      :title="getTitle"
-      :answer="getAnswer"
-      :day="currentDay + 1"
-      :total="studyPlan.length"
-      :index="currentIndex + 1"
-      @play="speak(getAnswer)"
-    />
-    <AppInput :original="getAnswer" @solved="handleNext"/>
-  </div>
+  <LayoutMain>
+    <template v-slot:navigation>
+      <AppCompletion :day="currentDay + 1" @changeDay="handleChangeDay"/>
+    </template>
+    <template v-slot:content>
+      <AppCard
+        :title="getTitle"
+        :answer="getAnswer"
+        :day="currentDay + 1"
+        :total="studyPlan.length"
+        :index="currentIndex + 1"
+        @play="speak(getAnswer)"
+      />
+      <AppInput :original="getAnswer" @solved="handleNext"/>
+    </template>
+  </LayoutMain>
 </template>
 
 <script>
+import LayoutMain from "@/layouts/LayoutMain";
 import AppCompletion from './AppCompletion';
 import AppCard from './AppCard';
 import AppInput from './AppInput';
-import cards from '@/db/cards.js';
+import cards from '@/db/cards_fr.js';
 import speech from "@/mixins/speech.js";
 
 export default {
   name: 'AppMain',
   mixins: [ speech ],
   components: {
+    LayoutMain,
     AppCompletion,
     AppCard,
     AppInput,
@@ -91,7 +97,7 @@ export default {
     createStudyPlan() {
       let { currentDay, cards } = this;
       this.studyPlan = [];
-      for (let i = 1; currentDay - i >= 0 && i < 4; i++) {
+      for (let i = 2; currentDay - i >= 0 && i < 5; i++) {
         this.studyPlan.unshift(...cards[currentDay - i]);
       }
       let iteration_prev = this.getIteration(cards[currentDay - 1]);
@@ -142,8 +148,5 @@ export default {
 </script>
 
 <style scoped>
-.app-main {
-  display: flex;
-  flex-direction: column;
-}
+
 </style>
