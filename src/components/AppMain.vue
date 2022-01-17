@@ -97,12 +97,9 @@ export default {
     createStudyPlan() {
       let { currentDay, cards } = this;
       this.studyPlan = [];
-      for (let i = 2; currentDay - i >= 0 && i < 5; i++) {
-        this.studyPlan.unshift(...cards[currentDay - i]);
+      for (let i = 0; currentDay - i >= 0 && i < 5; i++) {
+        this.studyPlan.unshift(...this.getIteration(cards[currentDay - i]))
       }
-      let iteration_prev = this.getIteration(cards[currentDay - 1]);
-      let iteration = this.getIteration(cards[currentDay]);
-      this.studyPlan.push(...iteration_prev, ...iteration);
     },
     getIteration(arr) {
       let result = [];
