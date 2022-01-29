@@ -83,6 +83,9 @@ export default {
       this.saveScore();
     },
     updateCurrentCard() {
+      if (this.currentIndex % 10 === 0) {
+        localStorage.setItem('index', this.currentIndex);
+      }
       this.currentCard = this.studyPlan[this.currentIndex];
     },
     getLastSavedDay() {
@@ -90,9 +93,14 @@ export default {
       if (day) {
         this.currentDay = parseInt(day);
       }
+      let index = localStorage.getItem('index');
+      if (index) {
+        this.currentIndex = parseInt(index);
+      }
     },
     saveScore() {
       localStorage.setItem('day', this.currentDay);
+      localStorage.setItem('index', 0);
     },
     createStudyPlan() {
       let { currentDay, cards } = this;
