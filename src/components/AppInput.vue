@@ -9,6 +9,9 @@
     <button class="record-btn" :class="{recording: listening}" @click="record">
       <img :src="micro" class="record-btn-icon"/>
     </button>
+    <ul v-if="alternatives && isWrong" class="alternatives">
+      <li v-for="(item, index) in alternatives" :key="index" @click="replaceInput(item.transcript)"> {{ item.transcript }} </li>
+    </ul>
   </div>
 </template>
 
@@ -28,6 +31,7 @@ export default {
   },
   data: () => ({
     part: '',
+    alternatives: null,
     allCorrect: false,
     speechRecognition: null,
     listening: false,
@@ -58,12 +62,17 @@ export default {
       this.allCorrect = false;
       if (!this.isWrong && this.originalStr.length === this.userStr.length) {
         this.allCorrect = true;
+        this.alternatives = null;
         this.$emit('solved');
         setTimeout(() => {
           this.part = "";
           this.allCorrect = false;
         }, 1000);
       }
+    },
+    replaceInput(value) {
+      this.part = value;
+      this.checkCorrectness();
     },
     record() {
       this.sound.play();
@@ -79,6 +88,7 @@ export default {
 <style scoped>
 .app-input {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 50px;
@@ -126,5 +136,23 @@ export default {
 
 .record-btn-icon {
   width: 30px;
+}
+
+.alternatives {
+  width: 100%;
+  max-width: 555px;
+  list-style: none;
+  text-align: left;
+}
+
+.alternatives li {
+  cursor: pointer;
+  max-width: 510px;
+  padding: 3px 8px;
+  transition: background 0.4s;
+}
+
+.alternatives li:hover {
+  background: #D5E9F1;
 }
 </style>
