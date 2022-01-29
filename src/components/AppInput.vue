@@ -88,10 +88,13 @@ export default {
 <style scoped>
 .app-input {
   display: flex;
+  max-width: 600px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .app-textarea {
